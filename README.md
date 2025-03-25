@@ -2,11 +2,6 @@
 
 **Findus Flying Nutz** is a fun web game where you control Findus the cat, flying through the jungle and avoiding obstacles.
 
-## Features
-- Smooth gameplay with responsive controls.
-- Jungle obstacles to dodge.
-- Catchy background music and sound effects.
-
 ## Technologies
 - Built with **HTML**, **CSS**, and mainly **JavaScript**.
 
