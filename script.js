@@ -34,8 +34,10 @@ function showMainMenu() {
 
         // starter spillet.
         startGame();
-        // Slår av
-        bakgrunnsMusikk.stop();
+        // Slår på musikk
+        bakgrunnsMusikk.play();{
+            console.log("Bakgrunnsmusikken spiller.")
+        }
     });
 }
 
@@ -81,15 +83,13 @@ var audioTriggered = false;
 // Trigger audio etter første brukerinteraksjon
 function triggerAudioPlayback() {
     if (!audioTriggered) {
-        bakgrunnsMusikk = new sound("sendmeonmyway.mp3");
-        bakgrunnsMusikk.play();
         audioTriggered = true;
     }
 }
 
 // Legg til event listeners for tastetrykk eller klikk
 document.addEventListener("keydown", triggerAudioPlayback);
-document.addEventListener("click", triggerAudioPlayback);
+//document.addEventListener("click", triggerAudioPlayback);
 
 
 
@@ -198,7 +198,10 @@ let myGameArea = {
         });
 
         // Stopp bakgrunnsmusikken når spillet stopper
-        bakgrunnsMusikk.stop();
+        bakgrunnsMusikk.stop();{
+            console.log("Stopper bakgrunnsmusikken gameover.")
+        }
+
 
         clearInterval(this.interval);  // Stopper spillsløyfen
     }
@@ -388,7 +391,9 @@ function updateGameArea(){
 
     if (collision) {
         if (!hasPlayedBonk) { // Spiller lyden kun hvis den ikke har blitt spilt allerede
-            bonkLyd.play();
+            bonkLyd.play();{
+                console.log("Spiller bonk-lyd.")
+            }
             hasPlayedBonk = true; // Hindrer gjentatt lyd
         }
         myGameArea.stop(); // Stopper spillet
