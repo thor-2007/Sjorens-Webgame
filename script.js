@@ -1,3 +1,58 @@
+// HJEMME MENYEN!:
+// Lager en meny funksjon:
+function showMainMenu() {
+
+    
+    
+    // lager en konteiner for menyen
+    let menuContainer = document.createElement("div");
+    menuContainer.classList.add("menu-container");
+
+    // lager en tittel for spillet
+    let gameTitle = document.createElement("h1");
+    gameTitle.innerHTML = "Findus Flying Nutz";  // endre dette for å endre tittel:
+    gameTitle.classList.add("game-title");
+    menuContainer.appendChild(gameTitle);
+
+    // Lager en "play" knapp:
+    let playButton = document.createElement("button");
+    playButton.innerHTML = "Play";
+    playButton.classList.add("play-button");
+    menuContainer.appendChild(playButton);
+
+    // Sett inn menybeholderen over lerretet (eller før eksisterende innhold)
+    document.body.insertBefore(menuContainer, document.body.firstChild);
+
+
+
+    // Lager en klikk event til playknappen.
+    playButton.addEventListener("click", function() {
+        // Fjerner hjemme menyen
+        menuContainer.remove();
+
+        
+
+        // starter spillet.
+        startGame();
+        // Slår av
+        bakgrunnsMusikk.stop();
+    });
+}
+
+
+
+// Show the main menu when the page loads
+window.onload = function() {
+    showMainMenu();
+
+};
+
+
+
+
+
+
+
 // Sound konstruktør for å håndtere musikkavspilling
 function sound(src) {
     this.sound = document.createElement("audio");
@@ -108,6 +163,8 @@ let myGameArea = {
     clear: function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
+
+
     // Funksjon for å stoppe spillet
     stop: function() {
         // Lager en container for game over-skjermen og knappen
@@ -125,7 +182,7 @@ let myGameArea = {
         tryAgainButton.innerHTML = "Try Again";
         tryAgainButton.classList.add("try-again-button");
         gameOverContainer.appendChild(tryAgainButton);
-
+        
         // Setter game over-containeren over canvasen
         document.body.insertBefore(gameOverContainer, myGameArea.canvas);
 
