@@ -93,3 +93,40 @@ canvas {
 .play-button:hover {
     background-color: #1b521e;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+#scoreContainer {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px; /* Space between score and highscore */
+    font-family: "Consolas", sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 20px;
+    border-radius: 10px;
+    user-select: none; /* Prevents text selection */
+    pointer-events: none; /* Prevents clicking */
+}
+
+#scoreDisplay, #highScoreDisplay {
+    color: white;
+}
+
+#highScoreDisplay {
+    color: gold; /* Highscore in gold */
+}

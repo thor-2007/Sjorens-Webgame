@@ -1,3 +1,7 @@
+// Lager en variabel for highscore:
+var highScore = sessionStorage.getItem("highScore") || 0;
+var myHighScore; // Komponent for å vise highscore
+
 // Lager en variabel for kuben min:
 var myGamePiece;
 // Lager variabel for vegger:
@@ -122,8 +126,31 @@ document.addEventListener("keydown", triggerAudioPlayback);
 function startGame(){
     myGameArea.start();  // Kaller på start-funksjonen til myGameArea for å sette opp spilleområdet
 
-    myScore = new component("30px", "Consolas", "white", 280, 40, "text");
-    myScore.text = "SCORE: 0";  // Initialiserer score tekst
+    
+    // Create container for score & highscore
+    let scoreContainer = document.createElement("div");
+    scoreContainer.id = "scoreContainer";
+    
+    // Create score display
+    let scoreDisplay = document.createElement("div");
+    scoreDisplay.id = "scoreDisplay";
+    scoreDisplay.innerHTML = "Score: 0";
+    
+    // Create highscore display
+    let highScoreDisplay = document.createElement("div");
+    highScoreDisplay.id = "highScoreDisplay";
+    let savedHighScore = sessionStorage.getItem("highScore") || 0;
+    highScoreDisplay.innerHTML = "Highscore: " + savedHighScore;
+    
+    // Append both to container
+    scoreContainer.appendChild(scoreDisplay);
+    scoreContainer.appendChild(highScoreDisplay);
+    
+    document.body.appendChild(scoreContainer);
+    
+    myScore = 0;
+    
+    
 
     // Starter bakgrunnsmusikk:
     bakgrunnsMusikk = new sound("sendmeonmyway.mp3");
@@ -169,8 +196,15 @@ let myGameArea = {
 
 
     // Funksjon for å stoppe spillet
+    // Stopper spillet og fjerner scoretavlen
     stop: function() {
-        // Lager en container for game over-skjermen og knappen
+        // Fjerner scoretavlen hvis den eksisterer
+        const scoreContainer = document.getElementById('scoreContainer');
+        if (scoreContainer) {
+            scoreContainer.remove();
+        }
+
+        // Lager en container for "Game Over" skjermen og knappen
         let gameOverContainer = document.createElement("div");
         gameOverContainer.classList.add("game-over-container");
 
@@ -180,7 +214,7 @@ let myGameArea = {
         h1El.classList.add("game-over-message");
         gameOverContainer.appendChild(h1El);
 
-        // Lager "Try Again"-knappen
+        // Lager "Prøv igjen"-knappen
         let tryAgainButton = document.createElement("button");
         tryAgainButton.innerHTML = "Try Again";
         tryAgainButton.classList.add("try-again-button");
@@ -189,7 +223,7 @@ let myGameArea = {
         // Setter game over-containeren over canvasen
         document.body.insertBefore(gameOverContainer, myGameArea.canvas);
 
-        // Legger til event-lytter til "Try Again"-knappen
+        // Legger til event-lytter til "Prøv igjen"-knappen
         tryAgainButton.addEventListener("click", function() {
             // Fjerner game over-containeren og knappen
             gameOverContainer.remove();
@@ -200,14 +234,13 @@ let myGameArea = {
             startGame();
         });
 
-        // Stopp bakgrunnsmusikken når spillet stopper
-        bakgrunnsMusikk.stop();{
-            console.log("Stopper bakgrunnsmusikken gameover.")
-        }
-
+        // Stopper bakgrunnsmusikken når spillet stopper
+        bakgrunnsMusikk.stop();
+        console.log("Stopper bakgrunnsmusikken gameover.")
 
         clearInterval(this.interval);  // Stopper spillsløyfen
     }
+
 }
 
 
@@ -407,12 +440,25 @@ function updateGameArea(){
     if (myGameArea.keys && myGameArea.keys["w"]) { myGamePiece.speedY = -2 } // Opp (W)
     if (myGameArea.keys && myGameArea.keys["s"]) { myGamePiece.speedY = 2 }  // Ned (S)
 
-    // Oppdaterer score-visningen
-    myScore.text = "SCORE: " + myGameArea.frameNo;
-    myScore.update();
+    
 
 
 
+
+
+    // Update Score
+    myScore = myGameArea.frameNo;
+    document.getElementById("scoreDisplay").innerHTML = "Score: " + myScore;
+
+    // Check and update highscore
+    let highScore = sessionStorage.getItem("highScore") || 0;
+    if (myScore > highScore) {
+        sessionStorage.setItem("highScore", myScore);
+        document.getElementById("highScoreDisplay").innerHTML = "Highscore: " + myScore;
+    }
+
+    
+        
 
 
     // Oppdaterer posisjonen til spilleren
