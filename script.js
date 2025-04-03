@@ -1,3 +1,28 @@
+// Lager en variabel for kuben min:
+var myGamePiece;
+// Lager variabel for vegger:
+var myObstacles = [];
+// Lager variabel for score:
+var myScore;
+// Lager en variabel for bakgrunnsmusikk:
+var bakgrunnsMusikk;
+// DUNK LYD:
+var bonkLyd;
+var hasPlayedBonk = false; // Forhindrer gjentatt lyd
+
+// Definerer bakgrunnsbildet
+var backgroundImage = new Image();
+backgroundImage.src = "background.png"; // Antar at "background.png" er bildet ditt
+
+var backgroundX = 0; // Startposisjon for bakgrunnens horisontale plassering
+var backgroundSpeed = 1; // Hastighet på bakgrunnens bevegelse
+
+
+
+
+
+
+
 // HJEMME MENYEN!:
 // Lager en meny funksjon:
 function showMainMenu() {
@@ -90,28 +115,6 @@ function triggerAudioPlayback() {
 // Legg til event listeners for tastetrykk eller klikk
 document.addEventListener("keydown", triggerAudioPlayback);
 //document.addEventListener("click", triggerAudioPlayback);
-
-
-
-
-// Lager en variabel for kuben min:
-var myGamePiece;
-// Lager variabel for vegger:
-var myObstacles = [];
-// Lager variabel for score:
-var myScore;
-// Lager en variabel for bakgrunnsmusikk:
-var bakgrunnsMusikk;
-// DUNK LYD:
-var bonkLyd;
-var hasPlayedBonk = false; // Forhindrer gjentatt lyd
-
-// Definerer bakgrunnsbildet
-var backgroundImage = new Image();
-backgroundImage.src = "background.png"; // Antar at "background.png" er bildet ditt
-
-var backgroundX = 0; // Startposisjon for bakgrunnens horisontale plassering
-var backgroundSpeed = 1; // Hastighet på bakgrunnens bevegelse
 
 
 
@@ -340,10 +343,43 @@ function updateGameArea(){
 
     // Oppdaterer posisjonen og tegner hindringene
     for (i = 0; i < myObstacles.length; i++) {
-
-        // REDIGER VERDIEN FOR Å GJØRE VANSKELIGERE:
-        myObstacles[i].x += -7;  // Flytter hindringene mot venstre
-
+        // Gjør spillet progresivt vanskelig:
+        if (myGameArea.frameNo > 8000) {
+            myObstacles[i].x += -20;  // Beveger hindringene raskere etter score > 8000
+        } else if (myGameArea.frameNo > 7500) {
+            myObstacles[i].x += -19;  // Beveger hindringene raskere etter score > 7500 etc. etc.
+        } else if (myGameArea.frameNo > 7000) {
+            myObstacles[i].x += -18;  
+        } else if (myGameArea.frameNo > 6500) {
+            myObstacles[i].x += -17;  
+        } else if (myGameArea.frameNo > 6000) {
+            myObstacles[i].x += -16;  
+        } else if (myGameArea.frameNo > 5500) {
+            myObstacles[i].x += -15; 
+        } else if (myGameArea.frameNo > 5000) {
+            myObstacles[i].x += -14;  
+        } else if (myGameArea.frameNo > 4500) {
+            myObstacles[i].x += -13;  
+        } else if (myGameArea.frameNo > 4000) {
+            myObstacles[i].x += -12;  
+        } else if (myGameArea.frameNo > 3500) {
+            myObstacles[i].x += -11;  
+        } else if (myGameArea.frameNo > 3000) {
+            myObstacles[i].x += -10; 
+        } else if (myGameArea.frameNo > 2500) {
+            myObstacles[i].x += -9;   
+        } else if (myGameArea.frameNo > 2000) {
+            myObstacles[i].x += -8;  
+        } else if (myGameArea.frameNo > 1500) {
+            myObstacles[i].x += -7;   
+        } else if (myGameArea.frameNo > 1000) {
+            myObstacles[i].x += -6;   
+        } else if (myGameArea.frameNo > 500) {
+            myObstacles[i].x += -5;  
+        } else {
+            myObstacles[i].x += -4;   // Standard hastighet for hindringene
+        }
+    
         myObstacles[i].update();
     }
 
@@ -370,6 +406,10 @@ function updateGameArea(){
     // Oppdaterer score-visningen
     myScore.text = "SCORE: " + myGameArea.frameNo;
     myScore.update();
+
+
+
+
 
     // Oppdaterer posisjonen til spilleren
     myGamePiece.newPos();
