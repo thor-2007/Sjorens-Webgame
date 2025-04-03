@@ -344,10 +344,14 @@ function updateGameArea(){
     // Oppdaterer posisjonen og tegner hindringene
     for (i = 0; i < myObstacles.length; i++) {
         // Gjør spillet progresivt vanskelig:
-        if (myGameArea.frameNo > 8000) {
-            myObstacles[i].x += -20;  // Beveger hindringene raskere etter score > 8000
+        if (myGameArea.frameNo > 9000) {
+            myObstacles[i].x += -22;  // Beveger hindringene raskere etter score > 9000
+        } else if (myGameArea.frameNo > 8500) {
+            myObstacles[i].x += -21;  // Beveger hindringene raskere etter score > 8500 etc. etc.
+        } else if (myGameArea.frameNo > 8000) {
+            myObstacles[i].x += -20; 
         } else if (myGameArea.frameNo > 7500) {
-            myObstacles[i].x += -19;  // Beveger hindringene raskere etter score > 7500 etc. etc.
+            myObstacles[i].x += -19;  
         } else if (myGameArea.frameNo > 7000) {
             myObstacles[i].x += -18;  
         } else if (myGameArea.frameNo > 6500) {
