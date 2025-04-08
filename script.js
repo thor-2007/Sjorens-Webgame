@@ -21,7 +21,7 @@ backgroundImage.src = "background.png"; // Antar at "background.png" er bildet d
 var backgroundX = 0; // Startposisjon for bakgrunnens horisontale plassering
 var backgroundSpeed = 1; // Hastighet på bakgrunnens bevegelse
 
-
+console.log("Hello world")
 
 
 
