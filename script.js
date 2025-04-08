@@ -1,7 +1,3 @@
-var myLasers = []; // Array for å holde alle laserne
-
-
-
 // Lager en variabel for highscore:
 var highScore = sessionStorage.getItem("highScore") || 0;
 var myHighScore; // Komponent for å vise highscore
@@ -20,7 +16,7 @@ var hasPlayedBonk = false; // Forhindrer gjentatt lyd
 
 // Definerer bakgrunnsbildet
 var backgroundImage = new Image();
-backgroundImage.src = "background.jpg"; // Antar at "background.png" er bildet ditt
+backgroundImage.src = "background.png"; // Antar at "background.png" er bildet ditt
 
 var backgroundX = 0; // Startposisjon for bakgrunnens horisontale plassering
 var backgroundSpeed = 1; // Hastighet på bakgrunnens bevegelse
@@ -34,6 +30,8 @@ var backgroundSpeed = 1; // Hastighet på bakgrunnens bevegelse
 // HJEMME MENYEN!:
 // Lager en meny funksjon:
 function showMainMenu() {
+
+    
     
     // lager en konteiner for menyen
     let menuContainer = document.createElement("div");
@@ -41,7 +39,7 @@ function showMainMenu() {
 
     // lager en tittel for spillet
     let gameTitle = document.createElement("h1");
-    gameTitle.innerHTML = "Aqua-Pop";  // endre dette for å endre tittel:
+    gameTitle.innerHTML = "Findus Flying Nutz";  // endre dette for å endre tittel:
     gameTitle.classList.add("game-title");
     menuContainer.appendChild(gameTitle);
 
@@ -59,7 +57,7 @@ function showMainMenu() {
     // Lager en klikk event til playknappen.
     playButton.addEventListener("click", function() {
         // Fjerner hjemme menyen
-        menuContainer.remove(); 
+        menuContainer.remove();
 
         
 
@@ -128,21 +126,6 @@ document.addEventListener("keydown", triggerAudioPlayback);
 function startGame(){
     myGameArea.start();  // Kaller på start-funksjonen til myGameArea for å sette opp spilleområdet
 
-
-    document.addEventListener("keydown", function(e) {
-        if (e.key === " ") {
-            shootLaser();
-        }
-    });
-    
-
-
-
-
-
-
-
-    
     
     // Create container for score & highscore
     let scoreContainer = document.createElement("div");
@@ -176,9 +159,8 @@ function startGame(){
     bonkLyd = new sound("bonk.mp3");
     hasPlayedBonk = false; // Reset dunk-lydstatus
 
-    // Her legger jeg til karakteren min:
-    //myGamePiece = new component(120, 100, "findus.png", 10, 120, "image");
-    myGamePiece = new component(120, 100, "blue", 10, 120);
+    // Her legger jeg til farge til variabelen min:
+    myGamePiece = new component(120, 100, "findus.png", 10, 120, "image");
 }
 
 
@@ -259,10 +241,6 @@ let myGameArea = {
         clearInterval(this.interval);  // Stopper spillsløyfen
     }
 
-
-
-
-    
 }
 
 
@@ -360,27 +338,7 @@ function updateGameArea(){
         } 
     }
 
-    
 
-    for (let i = myLasers.length - 1; i >= 0; i--) {
-        for (let j = myObstacles.length - 1; j >= 0; j--) {
-            if (myObstacles[j].canBeDestroyed && myLasers[i].crashWith(myObstacles[j])) {
-                myLasers.splice(i, 1);
-                myObstacles.splice(j, 1);
-                break;
-            }
-        }
-    }
-    
-
-
-    
-
-
-
-    
-
-    
 
 
     // Tømmer canvas for å tegne på nytt
@@ -412,33 +370,9 @@ function updateGameArea(){
         maxGap = 200; 
         gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
         // Lager nye hindringer
-            
-
-    
-
-    // Grønne hindringer (skal IKKE kunne skytes)
-    myObstacles.push(Object.assign(new component(20, height, "green", x, 0), { canBeDestroyed: false }));
-    myObstacles.push(Object.assign(new component(20, x - height - gap, "green", x, height + gap), { canBeDestroyed: false }));
-
-    // Lag flere lilla hindringer hver 150. frame
-    if (myGameArea.frameNo % 50 === 0) {
-        // Lag flere lilla objekter, for eksempel 3-5 objekter per oppdatering
-        for (let i = 0; i < 3; i++) {  // Lager 3 lilla objekter per 150 frames
-            let y = Math.floor(Math.random() * (myGameArea.canvas.height - 30));
-            
-            // Sikrer at det lilla objektet ikke overlapper med den grønne høyden (kan justeres videre hvis nødvendig)
-            // Hvis du har flere hindringer som overlapper, kan du legge til en sjekk her for å unngå overlappende plasseringer.
-            
-            // For eksempel, hvis grønn hindring er ved høyde 'height' med et gap, kan du justere
-            if (y > height + gap || y < height) {
-                myObstacles.push(Object.assign(new component(50, 50, "purple", x, y), { canBeDestroyed: true }));
-            }
-        }
+        myObstacles.push(new component(20, height, "green", x, 0));
+        myObstacles.push(new component(20, x - height - gap, "green", x, height + gap));
     }
-
-
-    }
-    
 
     // Oppdaterer posisjonen og tegner hindringene
     for (i = 0; i < myObstacles.length; i++) {
@@ -508,14 +442,6 @@ function updateGameArea(){
 
     
 
-        // Oppdaterer og tegner lasere
-    for (let i = 0; i < myLasers.length; i++) {
-        myLasers[i].x += 5; // Juster hastigheten på laseren
-        myLasers[i].update();
-    }
-
-    // Fjern lasere som har gått ut av skjermen
-    myLasers = myLasers.filter(laser => laser.x < myGameArea.canvas.width);
 
 
 
@@ -568,14 +494,6 @@ function updateGameArea(){
 }
 
 
-function shootLaser() {
-    let laser = new component(20, 10, "red", myGamePiece.x + myGamePiece.width, myGamePiece.y + myGamePiece.height / 2 - 1, "laser");
-    myLasers.push(laser);
-}
-
-
-
-
 
 
 // Funksjon som bestemmer om vi skal lage hindringer basert på interval
@@ -583,4 +501,3 @@ function everyinterval(n) {
     if ((myGameArea.frameNo / n) % 1 == 0) { return true; }
     return false;
 }
-
