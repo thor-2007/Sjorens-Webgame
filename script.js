@@ -15,6 +15,7 @@ function toggleFullscreen() {
         document.documentElement.requestFullscreen(); // Gå i fullskjerm
     } else {
         document.exitFullscreen(); // Avslutt fullskjerm
+        console.log("Avslutter fullskjerm.");
     }
 }
 
