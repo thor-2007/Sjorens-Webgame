@@ -16,11 +16,6 @@
 1. Clone the repo.
 2. Open `index.html` in your browser to play.
 
-## Getting Started/Download
-Scroll down to "Assets" page and click on the source code to download.
-After the download open files on your computer and right-click on the folder and unzip it/unpack.
-To start the game open the index.html file.
-
 **Currently planning to add:**
 
 - Turn the purple blocks into random trash.
@@ -30,3 +25,10 @@ To start the game open the index.html file.
 - Skin shop.
 - Working on a database for a scoreboard of the top players.
 - Own domain.
+
+
+
+## Getting Started/Download
+Scroll down to "Assets" page and click on the source code to download.
+After the download open files on your computer and right-click on the folder and unzip it/unpack.
+To start the game open the index.html file.
