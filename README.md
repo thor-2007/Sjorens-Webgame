@@ -1,6 +1,6 @@
 # Sjørens
 
-**Sjørens** is a fun web game where you control a mermaid, swimming through the ocean floor, cleaning trash with her superpowers.
+**Sjørens** is a crappy web game where you control a mermaid, swimming through the ocean floor, cleaning trash with her superpowers.
 
 ## Technologies
 - Built with **HTML**, **CSS**, and mainly **JavaScript**.
