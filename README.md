@@ -18,8 +18,9 @@
 
 **Currently planning to add:**
 
-- Turn the purple blocks into random trash.
-- Make the green obstacle more aesthetically pleasing.
+- Fix all the sound related glitches **(currently focusing on)**
+- Turn the purple blocks into random trash. **(Currently focusing on)**
+- Make the green obstacle more aesthetically pleasing.  **(Currently focusing on)**
 - More maps.
 - A Currency.
 - Skin shop.
