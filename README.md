@@ -2,6 +2,8 @@
 
 **Sjørens** is a crappy web game where you control a mermaid, swimming through the ocean floor, cleaning trash with her superpowers.
 
+**NOTE, THIS GAME IS IN BETA AND UNDER DEVELOPMENT!**
+
 ## Technologies
 - Built with **HTML**, **CSS**, and mainly **JavaScript**.
 
@@ -13,3 +15,18 @@
 ## Getting Started
 1. Clone the repo.
 2. Open `index.html` in your browser to play.
+
+## Getting Started/Download
+Scroll down to "Assets" page and click on the source code to download.
+After the download open files on your computer and right-click on the folder and unzip it/unpack.
+To start the game open the index.html file.
+
+**Currently planning to add:**
+
+- Turn the purple blocks into random trash.
+- Make the green obstacle more aesthetically pleasing.
+- More maps.
+- A Currency.
+- Skin shop.
+- Working on a database for a scoreboard of the top players.
+- Own domain.
