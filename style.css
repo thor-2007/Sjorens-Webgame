@@ -1,15 +1,17 @@
 body {
-    background-color: rgb(79, 58, 37);
+    background-color: rgb(66, 114, 153) !important;
 }
 
 canvas {
-    border: 5px solid black;
+    border: 5px solid rgb(77, 91, 93);
     background-color: rgb(182, 251, 161);
     position: absolute; 
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%) scale(1.5); /* 150% scale */
-    border-radius: 10px;
+    transform: translate(-50%, -50%) scale(1.45); /* 150% scale */
+    border-radius: 5px;
+    user-select: none; /*Stopp tekst seleksjon*/
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .game-over-container {
@@ -19,6 +21,8 @@ canvas {
     transform: translateX(-50%);
     text-align: center;
     z-index: 2;
+    user-select: none;
+    
 }
 
 .game-over-message {
@@ -26,7 +30,9 @@ canvas {
     font-size: 85px;
     color: black;
     margin-top: 70px;
-    text-shadow: -3px -3px 0 #ff0000, 3px -3px 0 #ff0c0c, -3px 3px 0 #ff0000, 3px 3px 0 #ff0000;
+    text-shadow: -3px -3px 0 #77ffeb, 3px -3px 0 #ff0c0c, -3px 3px 0 #ff0000, 3px 3px 0 #ff0000;
+    user-select: none; /* Stopp tekst seleksjon */
+    pointer-events: none; /* Stopper klikking */
 }
 
 .try-again-button {
@@ -34,16 +40,20 @@ canvas {
     margin-top: 10px;
     padding: 20px 30px;
     font-size: 30px;
-    background-color: #4CAF50;
-    text-shadow: -1.5px -1.5px 0 #000000, 1.5px -1.5px 0 #000000, -1.5px 1.5px 0 #000000, 1.5px 1.5px 0 #000000;
-    color: white;
+    font-weight:700;
+    background-color: #58cba9;
+    text-shadow: -1.3px -1.3px 0 #000000, 1.3px -1.3px 0 #000000, -1.3px 1.3px 0 #000000, 1.3px 1.3px 0 #000000;
+    color: rgb(255, 255, 255);
     border: 3px solid black;
     border-radius: 5px;
     cursor: pointer;
+    user-select: none; /* Stopp tekst seleksjon */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .try-again-button:hover {
-    background-color: #1b521e;
+    background-color: #1d8062;
+    user-select: none; /* Stopp tekst seleksjon */
 }
 
 
@@ -57,7 +67,6 @@ canvas {
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: rgba(79, 58, 37, 0.7);
     position: absolute;
     top: 0;
     left: 0;
@@ -67,39 +76,60 @@ canvas {
 
 .game-title {
     color: rgb(0, 0, 0);
-    text-shadow: -2px -2px 0 #ffffff, 2px -2px 0 #ff0c0c, -2px 2px 0 #ff0000, 2px 2px 0 #ff0000;
-    font-size: 9rem;
+    text-shadow: -2px -2px 0 #ffffff, 2px -2px 0 #37ffc3, -2px 2px 0 #37ffc3, 2px 2px 0 #37ffc3;
+    font-size: 12rem;
     margin-bottom: 20px;
     margin-top: -150px;
     font-family: 'Brush Script MT';
-    transition: all .2s ease-in-out
+    transition: all .2s ease-in-out;
+    user-select: none; /* Stopp tekst seleksjon */
 }
 .game-title:hover{
     transform: scale(1.03);
+    transform: scale(1.04);
 }
 
 .play-button {
     margin-top: 50px;
     padding: 10px 20px;
     font-size: 2rem;
-    background-color: #4CAF50;
+    background-color: #2abc90;
     border: 3px solid black;
     color: white;
     text-shadow: -1.5px -1.5px 0 #000000, 1.5px -1.5px 0 #000000, -1.5px 1.5px 0 #000000, 1.5px 1.5px 0 #000000;
     border-radius: 5px;
     cursor: pointer;
+    user-select: none; /* Stopp tekst seleksjon */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .play-button:hover {
-    background-color: #1b521e;
+    background-color: #1d8062;
+    user-select: none; /* Stopp tekst seleksjon */
 }
 
 
 
-
-
-
-
+.game-over-highscore{
+    color: gold; 
+    margin-bottom: -2px;
+}
+.game-over-purplebox-highscore{
+    color: rgb(12, 230, 27);
+    margin-bottom: 10px;
+}
+.game-over-highscore, .game-over-purplebox-highscore{
+    font-family: 'Consolas', sans-serif;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 3px;
+    padding: 5px;
+    width: 280px;
+    height: 25px;
+    left: 50%;
+    transform: translateX(50%);
+    font-size: 20px;
+    font-weight: bold;
+}
 
 
 
@@ -107,20 +137,20 @@ canvas {
 
 #scoreContainer {
     position: absolute;
-    top: 20px;
+    top: 0px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 20px; /* Space between score and highscore */
     font-family: "Consolas", sans-serif;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
     color: white;
     background: rgba(0, 0, 0, 0.7);
-    padding: 10px 20px;
+    padding: 10px 30px;
     border-radius: 10px;
-    user-select: none; /* Prevents text selection */
-    pointer-events: none; /* Prevents clicking */
+    user-select: none; /* Stopp tekst seleksjon */
+    pointer-events: none; /* Stopper klikking */
 }
 
 #scoreDisplay, #highScoreDisplay {
@@ -128,5 +158,40 @@ canvas {
 }
 
 #highScoreDisplay {
-    color: gold; /* Highscore in gold */
+    color: gold; 
 }
+
+#purpleBoxScoreDisplay {
+    color: rgb(205, 4, 205);
+}
+
+#purpleBoxHighScoreDisplay {
+    color: rgb(12, 230, 27);
+}
+
+
+
+
+
+
+#fullscreen-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 6px 12px;
+    font-size: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: rgb(255, 255, 255, 0.8); 
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
+    transition: background-color 0.3s ease; /*Glatt overgang for hover */
+    user-select: none;
+}
+
+#fullscreen-button:hover {
+    background-color: #cfcfcf; /* Mørkere grønn ved hover */
+}
+

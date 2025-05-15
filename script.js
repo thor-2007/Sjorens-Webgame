@@ -1,27 +1,85 @@
-// Lager en variabel for highscore:
+// Knapp for å gå fullskjerm!
+// Skal være ærlig og si at dette har jeg kopiert mye nettet.
+// Her er hvor jeg fant den: https://www.w3schools.com/howto/howto_js_fullscreen.asp
+
+// Opprett en knapp for fullskjerm
+// Opprett en knapp for fullskjerm
+let fullscreenButton = document.createElement("button");
+fullscreenButton.id = "fullscreen-button";
+fullscreenButton.innerHTML = "⛶";
+document.body.appendChild(fullscreenButton);
+
+// Funksjon for å aktivere/deaktivere fullskjerm
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen(); // Gå i fullskjerm
+    } else {
+        document.exitFullscreen(); // Avslutt fullskjerm
+    }
+}
+
+// Koble funksjonen til knappen
+fullscreenButton.addEventListener("click", toggleFullscreen);
+
+// Forhindre at spacebar aktiverer fullskjerm
+document.addEventListener("keydown", function (e) {
+    if (e.code === "Space" && document.activeElement.id === "fullscreen-button") {
+        e.preventDefault(); // Forhindrer at spacebar aktiverer fullskjerm
+    }
+});
+
+
+
+
+// Definerer alle nødvendige variabler:
+
+
+var myLasers = []; //Array for å holde alle laserne
+
+//Lager en variabel for highscore:
 var highScore = sessionStorage.getItem("highScore") || 0;
 var myHighScore; // Komponent for å vise highscore
 
-// Lager en variabel for kuben min:
+//lager en variabel for kuben min:
 var myGamePiece;
-// Lager variabel for vegger:
+//Lager variabel for vegger:
 var myObstacles = [];
-// Lager variabel for score:
+//Lager variabel for score:
 var myScore;
-// Lager en variabel for bakgrunnsmusikk:
+//Lager en variabel for bakgrunnsmusikk:
 var bakgrunnsMusikk;
-// DUNK LYD:
+//DUNK LYD:
 var bonkLyd;
 var hasPlayedBonk = false; // Forhindrer gjentatt lyd
 
-// Definerer bakgrunnsbildet
+//Definerer bakgrunnsbildet
 var backgroundImage = new Image();
-backgroundImage.src = "background.png"; // Antar at "background.png" er bildet ditt
+backgroundImage.src = "background.png"; //Antar at "background.png" er bildet ditt
+backgroundImage.src = "background.jpg"; //Antar at "background.png" er bildet ditt
 
-var backgroundX = 0; // Startposisjon for bakgrunnens horisontale plassering
-var backgroundSpeed = 1; // Hastighet på bakgrunnens bevegelse
+var backgroundX = 0; //Startposisjon for bakgrunnens horisontale plassering
+var backgroundSpeed = 1; //Hastighet på bakgrunnens bevegelse
 
-console.log("Hello world")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var purpleBoxScore = 0; //Poeng for å skyte lilla bokser
+
 
 
 
@@ -39,7 +97,7 @@ function showMainMenu() {
 
     // lager en tittel for spillet
     let gameTitle = document.createElement("h1");
-    gameTitle.innerHTML = "Findus Flying Nutz";  // endre dette for å endre tittel:
+    gameTitle.innerHTML = "Sjørens";  // endre dette for å endre tittel:
     gameTitle.classList.add("game-title");
     menuContainer.appendChild(gameTitle);
 
@@ -58,6 +116,7 @@ function showMainMenu() {
     playButton.addEventListener("click", function() {
         // Fjerner hjemme menyen
         menuContainer.remove();
+        menuContainer.remove(); 
 
         
 
@@ -123,46 +182,102 @@ document.addEventListener("keydown", triggerAudioPlayback);
 
 
 // Her starter jeg spillet:
-function startGame(){
-    myGameArea.start();  // Kaller på start-funksjonen til myGameArea for å sette opp spilleområdet
+function startGame() {
+    myGameArea.start(); // Kaller på start-funksjonen til myGameArea for å sette opp spilleområdet
 
-    
-    // Create container for score & highscore
-    let scoreContainer = document.createElement("div");
-    scoreContainer.id = "scoreContainer";
-    
-    // Create score display
+
+    // Opprett spilleren som ett bilde
+    myGamePiece = new component(170, 100, "karakter-01.png", 10, 120, "image");
+
+
+
+
+
+    backgroundSpeed = 1; // Sett tilbake til standard hastighet
+    console.log("Restarter hastigheten til bakgrunnen til 1.");
+
+    // Legg til event-lytter for å skyte laser
+    document.addEventListener("keydown", function (e) {
+        if (e.key === " ") {
+            shootLaser();
+        }
+    });
+
+    // Sjekk om scoreContainer allerede eksisterer, og opprett det hvis det mangler
+    let scoreContainer = document.getElementById("scoreContainer");
+    if (!scoreContainer) {
+        scoreContainer = document.createElement("div");
+        scoreContainer.id = "scoreContainer";
+        document.body.appendChild(scoreContainer);
+    } else {
+        scoreContainer.innerHTML = ""; // Tøm containeren for å unngå duplikater
+    }
+
+    // Opprett score display
     let scoreDisplay = document.createElement("div");
     scoreDisplay.id = "scoreDisplay";
     scoreDisplay.innerHTML = "Score: 0";
-    
-    // Create highscore display
+
+    // Opprett highscore display
     let highScoreDisplay = document.createElement("div");
     highScoreDisplay.id = "highScoreDisplay";
     let savedHighScore = sessionStorage.getItem("highScore") || 0;
     highScoreDisplay.innerHTML = "Highscore: " + savedHighScore;
-    
-    // Append both to container
+
+    // Append begge til containeren
     scoreContainer.appendChild(scoreDisplay);
     scoreContainer.appendChild(highScoreDisplay);
-    
-    document.body.appendChild(scoreContainer);
-    
+
+    // Nullstill score
     myScore = 0;
-    
+    document.getElementById("scoreDisplay").innerHTML = "Score: 0";
+
+    // Sjekk om purpleBoxScoreDisplay allerede eksisterer, og opprett det hvis det mangler
+    let purpleBoxScoreDisplay = document.getElementById("purpleBoxScoreDisplay");
+    if (!purpleBoxScoreDisplay) {
+        purpleBoxScoreDisplay = document.createElement("div");
+        purpleBoxScoreDisplay.id = "purpleBoxScoreDisplay";
+        scoreContainer.appendChild(purpleBoxScoreDisplay);
+    }
+    purpleBoxScore = 0; // Nullstill poengsummen for lilla bokser
+    purpleBoxScoreDisplay.innerHTML = "Target Score: 0";
+
+
+
+
+
+
+
+
+
+    // Opprett purpleBoxHighScoreDisplay
+    let purpleBoxHighScoreDisplay = document.createElement("div");
+    purpleBoxHighScoreDisplay.id = "purpleBoxHighScoreDisplay";
+    let savedPurpleBoxHighScore = sessionStorage.getItem("purpleBoxHighScore") || 0;
+    purpleBoxHighScoreDisplay.innerHTML = "Target Highscore: " + savedPurpleBoxHighScore;
+
+    scoreContainer.appendChild(purpleBoxHighScoreDisplay);
+
+
+
+
+
+
     
 
-    // Starter bakgrunnsmusikk:
-    bakgrunnsMusikk = new sound("sendmeonmyway.mp3");
-    bakgrunnsMusikk.play();  // Spiller av bakgrunnsmusikken
 
+
+
+    // Start bakgrunnsmusikk
+    if (!bakgrunnsMusikk) {
+        bakgrunnsMusikk = new sound("sendmeonmyway.mp3");
+    }
+    bakgrunnsMusikk.play();
+
+    // Nullstill bonk-lydstatus
     bonkLyd = new sound("bonk.mp3");
-    hasPlayedBonk = false; // Reset dunk-lydstatus
-
-    // Her legger jeg til farge til variabelen min:
-    myGamePiece = new component(120, 100, "findus.png", 10, 120, "image");
+    hasPlayedBonk = false;
 }
-
 
 
 
@@ -171,16 +286,16 @@ let myGameArea = {
     // Lager et nytt canvas-element som er det området der spillet vises
     canvas : document.createElement("canvas"),
     // Funksjon som setter opp spilleområdet når spillet starter
-    start: function(){
-        this.canvas.width = 880;
-        this.canvas.height = 470; 
+    start: function() {
+        this.canvas.width = 900;
+        this.canvas.height = 470;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-
+    
         this.frameNo = 0;
-        this.interval = setInterval(updateGameArea, 20);  // Starter spillsløyfen (game loop)
-
-        // Legger til event-lyttere for tastetrykk
+        this.interval = setInterval(updateGameArea, 20); // Starter spillsløyfen
+    
+        // Legg til event-lyttere for tastetrykk
         window.addEventListener('keydown', function (e) {
             myGameArea.keys = (myGameArea.keys || []);
             myGameArea.keys[e.key] = (e.type == "keydown");
@@ -201,46 +316,95 @@ let myGameArea = {
         // Fjerner scoretavlen hvis den eksisterer
         const scoreContainer = document.getElementById('scoreContainer');
         if (scoreContainer) {
-            scoreContainer.remove();
+            scoreContainer.remove(); // Fjerner hele scoreContainer for å unngå duplikater
         }
-
-        // Lager en container for "Game Over" skjermen og knappen
+    
+        // Lager en container for "Game Over"-skjermen og knappen
         let gameOverContainer = document.createElement("div");
         gameOverContainer.classList.add("game-over-container");
-
+    
         // Lager "Game Over"-meldingen
         let h1El = document.createElement("h1");
         h1El.innerHTML = "Game Over!";
         h1El.classList.add("game-over-message");
         gameOverContainer.appendChild(h1El);
+    
+
+
+        // Vis Highscore
+        let highScore = sessionStorage.getItem("highScore") || 0;
+        let highScoreDisplay = document.createElement("div");
+        highScoreDisplay.innerHTML = "Highscore: " + highScore;
+        highScoreDisplay.classList.add("game-over-highscore");
+        gameOverContainer.appendChild(highScoreDisplay);
+
+        // Vis Purple Box Highscore
+        let purpleBoxHighScore = sessionStorage.getItem("purpleBoxHighScore") || 0;
+        let purpleBoxHighScoreDisplay = document.createElement("div");
+        purpleBoxHighScoreDisplay.innerHTML = "Target Highscore: " + purpleBoxHighScore;
+        purpleBoxHighScoreDisplay.classList.add("game-over-purplebox-highscore");
+        gameOverContainer.appendChild(purpleBoxHighScoreDisplay);
+            
+
+
 
         // Lager "Prøv igjen"-knappen
         let tryAgainButton = document.createElement("button");
         tryAgainButton.innerHTML = "Try Again";
         tryAgainButton.classList.add("try-again-button");
         gameOverContainer.appendChild(tryAgainButton);
-        
+    
         // Setter game over-containeren over canvasen
         document.body.insertBefore(gameOverContainer, myGameArea.canvas);
-
+    
         // Legger til event-lytter til "Prøv igjen"-knappen
         tryAgainButton.addEventListener("click", function() {
-            // Fjerner game over-containeren og knappen
+            // Fjern game over-containeren
             gameOverContainer.remove();
-
-            // Tilbakestiller spilltilstanden og starter et nytt spill
-            myObstacles = [];
-            myGamePiece = null;
+    
+            // Nullstill poengsummen for lilla bokser
+            purpleBoxScore = 0;
+    
+            // Opprett scoreContainer på nytt
+            let scoreContainer = document.createElement("div");
+            scoreContainer.id = "scoreContainer";
+            document.body.appendChild(scoreContainer);
+    
+            // Opprett purpleBoxScoreDisplay på nytt
+            let purpleBoxScoreDisplay = document.createElement("div");
+            purpleBoxScoreDisplay.id = "purpleBoxScoreDisplay";
+            purpleBoxScoreDisplay.innerHTML = "Target Score: 0";
+            scoreContainer.appendChild(purpleBoxScoreDisplay);
+    
+            // Nullstill andre variabler
+            myObstacles = []; // Tøm hindringer
+            myLasers = []; // Tøm lasere
+            myGamePiece = null; // Nullstill spilleren
+    
+            // Nullstill frame-telleren
+            myGameArea.frameNo = 0;
+    
+            // Tøm canvas
+            myGameArea.clear();
+    
+            // Start spillet på nytt
             startGame();
         });
-
+    
         // Stopper bakgrunnsmusikken når spillet stopper
-        bakgrunnsMusikk.stop();
-        console.log("Stopper bakgrunnsmusikken gameover.")
-
-        clearInterval(this.interval);  // Stopper spillsløyfen
+        if (bakgrunnsMusikk) {
+            bakgrunnsMusikk.stop();
+            console.log("Stopper bakgrunnsmusikken gameover.");
+        }
+    
+        // Stopper spillsløyfen
+        clearInterval(this.interval);
     }
 
+
+
+
+    
 }
 
 
@@ -251,32 +415,48 @@ function component(width, height, color, x, y, type){
     this.type = type;
     this.width = width;
     this.height = height;
+    this.color = color;
     this.x = x;
     this.y = y;
     this.speedX = 0;
     this.speedY = 0;
 
-    // For å laste inn bilde
+
+
+
+
+
+
+
+
+
     if (this.type == "image") {
         this.image = new Image();  // Lager et nytt bildeobjekt
-        this.image.src = color;  // "color"-parameteren er egentlig bildets kilde her (som "findus.png")
+        this.image.src = color;  // "color"-parameteren er egentlig bildets kilde her (som "karakter-01.png")
     }
-
+    
     // Funksjon for å tegne objektet på skjermen
-    this.update = function(){
+    this.update = function() {
         ctx = myGameArea.context;
-
-        if (this.type == "text") {
-            ctx.font = this.width + " " + this.height;
-            ctx.fillStyle = color;
-            ctx.fillText(this.text, this.x, this.y);
-        } else if (this.type == "image" && this.image.complete) { // Sjekker om bildet er lastet
+    
+        if (this.type == "image" && this.image.complete) { // Sjekker om bildet er lastet
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);  // Tegner bildet
         } else {
             ctx.fillStyle = color;
-            ctx.fillRect(this.x, this.y, this.width, this.height);
+            ctx.fillRect(this.x, this.y, this.width, this.height); // Tegner en rektangel hvis bildet ikke er lastet
         }
-    }
+    };
+
+
+
+
+
+
+
+
+
+
+
 
     // Funksjon for å oppdatere posisjonen til objektet
     this.newPos = function(){
@@ -306,21 +486,18 @@ function component(width, height, color, x, y, type){
     
 
     // Funksjon for å sjekke om et objekt krasjer med et annet
-    this.crashWith = function(otherobj){
+    this.crashWith = function(otherobj) {
         var myleft = this.x;
-        var myright = this.x + (this.width);
+        var myright = this.x + this.width;
         var mytop = this.y;
-        var mybottom = this.y + (this.height);
+        var mybottom = this.y + this.height;
         var otherleft = otherobj.x;
-        var otherright = otherobj.x + (otherobj.width);
+        var otherright = otherobj.x + otherobj.width;
         var othertop = otherobj.y;
-        var otherbottom = otherobj.y + (otherobj.height);
-        var crash = true;
-        if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)){
-            crash = false;
-        }
-        return crash;
-    }
+        var otherbottom = otherobj.y + otherobj.height;
+    
+        return !(mybottom < othertop || mytop > otherbottom || myright < otherleft || myleft > otherright);
+    };
 }
 
 
@@ -330,6 +507,97 @@ function component(width, height, color, x, y, type){
 function updateGameArea(){
     var x, height, gap, minHeight, maxHeight, minGap, maxGap;
 
+    // Update the purpleBoxScoreDisplay element
+    let purpleBoxScoreDisplay = document.getElementById("purpleBoxScoreDisplay");
+    if (purpleBoxScoreDisplay) {
+        purpleBoxScoreDisplay.innerHTML = "Target Score: " + purpleBoxScore;
+    }
+
+
+
+
+    let purpleBoxHighScoreDisplay = document.getElementById("purpleBoxHighScoreDisplay");
+    let purpleBoxHighScore = parseInt(sessionStorage.getItem("purpleBoxHighScore")) || 0; // Hent highscore fra sessionStorage
+    if (purpleBoxScore > purpleBoxHighScore) {
+        sessionStorage.setItem("purpleBoxHighScore", purpleBoxScore); // Oppdater sessionStorage
+        if (purpleBoxHighScoreDisplay) {
+            purpleBoxHighScoreDisplay.innerHTML = "Purple Box Highscore: " + purpleBoxScore; // Oppdater display
+        }
+    }
+
+
+
+    
+
+    // Om du leser dette Johannes, så vil jeg bare si at jeg beklager.
+    // Jeg vet at det er litt rotete men det funker :)
+
+
+    // Oppdaterer bakgrunnsposisjonen for å få den til å rulle
+    if (myGameArea.frameNo > 500) {
+        backgroundSpeed = 2; // Øk hastigheten etter 500 frames
+    }
+    if (myGameArea.frameNo > 1000) {
+        backgroundSpeed = 2.05; // Øk hastigheten etter 1000 frames
+    }
+    if (myGameArea.frameNo > 1500) {
+        backgroundSpeed = 2.1; // Øk hastigheten etter 1500 frames
+    }
+    if (myGameArea.frameNo > 2000) {
+        backgroundSpeed = 2.15; // Øk hastigheten etter 2000 frames
+    }
+    if (myGameArea.frameNo > 2500) {
+        backgroundSpeed = 2.2; // Øk hastigheten etter 2500 frames
+    }
+    if (myGameArea.frameNo > 3000) {
+        backgroundSpeed = 2.25; // Øk hastigheten etter 3000 frames
+    }
+    if (myGameArea.frameNo > 4000) {
+        backgroundSpeed = 2.3; // Øk hastigheten etter 4000 frames
+    }
+    if (myGameArea.frameNo > 5000) {
+        backgroundSpeed = 2.35; // Øk hastigheten etter 5000 frames
+    }
+    if (myGameArea.frameNo > 6000) {
+        backgroundSpeed = 2.4; // Øk hastigheten etter 6000 frames
+    }
+    if (myGameArea.frameNo > 7000) {
+        backgroundSpeed = 2.45; // Øk hastigheten etter 7000 frames
+    }
+    if (myGameArea.frameNo > 8000) {
+        backgroundSpeed = 2.5; // Øk hastigheten etter 8000 frames
+    }
+
+    // Oppdaterer bakgrunnsposisjonen
+    backgroundX -= backgroundSpeed;
+
+    // Hvis bakgrunnen har beveget seg helt ut av skjermen, sett den tilbake til startposisjonen
+    if (backgroundX <= -myGameArea.canvas.width) {
+        backgroundX = 0;
+    }
+
+    // Tegner bakgrunnen
+    myGameArea.context.drawImage(backgroundImage, backgroundX, 0, myGameArea.canvas.width, myGameArea.canvas.height);
+    myGameArea.context.drawImage(backgroundImage, backgroundX + myGameArea.canvas.width, 0, myGameArea.canvas.width, myGameArea.canvas.height);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Sjekker om spillerens figur krasjer med noen hindringer
     for (i = 0; i < myObstacles.length; i++) {
         if (myGamePiece.crashWith(myObstacles[i])) {
@@ -338,7 +606,42 @@ function updateGameArea(){
         } 
     }
 
+    
+    // Oppdaterer og tegner lasere
+    for (let i = 0; i < myLasers.length; i++) {
+        myLasers[i].x += 5; // Juster hastigheten på laseren
+        myLasers[i].update();
+    }
 
+    // Fjern lasere som har gått ut av skjermen
+    myLasers = myLasers.filter(laser => laser.x < myGameArea.canvas.width && laser.x + laser.width > 0);
+
+    
+
+    for (let i = myLasers.length - 1; i >= 0; i--) {
+        for (let j = myObstacles.length - 1; j >= 0; j--) {
+            if (myLasers[i].crashWith(myObstacles[j])) {
+                console.log("Hindring truffet:", myObstacles[j]); // Debugging
+    
+                // Hvis det er en lilla boks, legg til poeng
+                if (myObstacles[j].canBeDestroyed && myObstacles[j].color === "purple") {
+                    purpleBoxScore += 1;
+                    document.getElementById("purpleBoxScoreDisplay").innerHTML = "Target Score: " + purpleBoxScore;
+                    console.log("Lilla boks truffet! Ny score:", purpleBoxScore); // Debugging
+                }
+    
+                // Fjern laseren
+                myLasers.splice(i, 1);
+    
+                // Hvis boksen kan ødelegges (lilla), fjern den
+                if (myObstacles[j].canBeDestroyed) {
+                    myObstacles.splice(j, 1);
+                }
+    
+                break; // Avslutt den indre løkken for å unngå flere treff
+            }
+        }
+    }
 
 
     // Tømmer canvas for å tegne på nytt
@@ -356,10 +659,10 @@ function updateGameArea(){
     myGameArea.context.drawImage(backgroundImage, backgroundX, 0, myGameArea.canvas.width, myGameArea.canvas.height);
     myGameArea.context.drawImage(backgroundImage, backgroundX + myGameArea.canvas.width, 0, myGameArea.canvas.width, myGameArea.canvas.height);
 
-    myGameArea.frameNo += 1;  // Øker frame-telleren (bare én gang)
+    myGameArea.frameNo += 1;  // Øker frame-telleren (bare en gang)
 
     // Sjekker om vi skal lage nye hindringer
-    if (myGameArea.frameNo == 1 || everyinterval(150)) {
+    if (myGameArea.frameNo == 1 || everyinterval(150)) { //Rediger denne for å få hindringene til å dukke opp oftere!
         x = myGameArea.canvas.width;
         minHeight = 20;
         maxHeight = 200;
@@ -370,51 +673,96 @@ function updateGameArea(){
         maxGap = 200; 
         gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
         // Lager nye hindringer
-        myObstacles.push(new component(20, height, "green", x, 0));
-        myObstacles.push(new component(20, x - height - gap, "green", x, height + gap));
+        myObstacles.push(new component(20, height, "teal", x, 0));
+        myObstacles.push(new component(20, x - height - gap, "teal", x, height + gap));
+            
+        
+    
+
+    // Grønne hindringer (skal IKKE kunne skytes)
+    myObstacles.push(Object.assign(new component(20, height, "teal", x, 0), { canBeDestroyed: false }));
+    myObstacles.push(Object.assign(new component(20, x - height - gap, "teal", x, height + gap), { canBeDestroyed: false }));
+
+    // Lag flere lilla hindringer hver 50. frame
+    // Lag flere lilla hindringer hver 50. frame
+    if (myGameArea.frameNo % 50 === 0) {
+        for (let i = 0; i < 3; i++) {
+            let attempts = 0;
+            let maxAttempts = 10;
+            let newBox;
+            let overlaps;
+    
+            do {
+                let y = Math.floor(Math.random() * (myGameArea.canvas.height - 30));
+                newBox = Object.assign(new component(50, 50, "purple", myGameArea.canvas.width, y), { canBeDestroyed: true });
+    
+                // Sjekk for overlapp med eksisterende hindringer
+                overlaps = myObstacles.some(obstacle => {
+                    return (
+                        newBox.x < obstacle.x + obstacle.width &&
+                        newBox.x + newBox.width > obstacle.x &&
+                        newBox.y < obstacle.y + obstacle.height &&
+                        newBox.y + newBox.height > obstacle.y
+                    );
+                });
+    
+                attempts++;
+            } while (overlaps && attempts < maxAttempts);
+    
+            // Legg til boksen hvis det ikke er overlapp
+            if (!overlaps) {
+                myObstacles.push(newBox);
+            }
+        }
     }
 
+
+    }
+    
+    
+    
+     
     // Oppdaterer posisjonen og tegner hindringene
     for (i = 0; i < myObstacles.length; i++) {
         // Gjør spillet progresivt vanskelig:
         if (myGameArea.frameNo > 9000) {
-            myObstacles[i].x += -22;  // Beveger hindringene raskere etter score > 9000
+            myObstacles[i].x += -24;  // Beveger hindringene raskere etter score > 9000
         } else if (myGameArea.frameNo > 8500) {
-            myObstacles[i].x += -21;  // Beveger hindringene raskere etter score > 8500 etc. etc.
+            myObstacles[i].x += -23;  // Beveger hindringene raskere etter score > 8500 etc. etc.
         } else if (myGameArea.frameNo > 8000) {
-            myObstacles[i].x += -20; 
+            myObstacles[i].x += -22; 
         } else if (myGameArea.frameNo > 7500) {
-            myObstacles[i].x += -19;  
+            myObstacles[i].x += -21;  
         } else if (myGameArea.frameNo > 7000) {
-            myObstacles[i].x += -18;  
+            myObstacles[i].x += -20;  
         } else if (myGameArea.frameNo > 6500) {
-            myObstacles[i].x += -17;  
+            myObstacles[i].x += -19;  
         } else if (myGameArea.frameNo > 6000) {
-            myObstacles[i].x += -16;  
+            myObstacles[i].x += -18;  
         } else if (myGameArea.frameNo > 5500) {
-            myObstacles[i].x += -15; 
+            myObstacles[i].x += -17; 
         } else if (myGameArea.frameNo > 5000) {
-            myObstacles[i].x += -14;  
+            myObstacles[i].x += -16;  
         } else if (myGameArea.frameNo > 4500) {
-            myObstacles[i].x += -13;  
+            myObstacles[i].x += -15;  
         } else if (myGameArea.frameNo > 4000) {
-            myObstacles[i].x += -12;  
+            myObstacles[i].x += -14;  
         } else if (myGameArea.frameNo > 3500) {
-            myObstacles[i].x += -11;  
+            myObstacles[i].x += -13;  
         } else if (myGameArea.frameNo > 3000) {
-            myObstacles[i].x += -10; 
+            myObstacles[i].x += -12; 
         } else if (myGameArea.frameNo > 2500) {
-            myObstacles[i].x += -9;   
+            myObstacles[i].x += -11;   
         } else if (myGameArea.frameNo > 2000) {
-            myObstacles[i].x += -8;  
+            myObstacles[i].x += -10;  
         } else if (myGameArea.frameNo > 1500) {
-            myObstacles[i].x += -7;   
+            myObstacles[i].x += -9;   
         } else if (myGameArea.frameNo > 1000) {
-            myObstacles[i].x += -6;   
+            myObstacles[i].x += -8;   
         } else if (myGameArea.frameNo > 500) {
-            myObstacles[i].x += -5;  
+            myObstacles[i].x += -7;  
         } else {
-            myObstacles[i].x += -4;   // Standard hastighet for hindringene
+            myObstacles[i].x += -6;   // Standard hastighet for hindringene
         }
     
         myObstacles[i].update();
@@ -442,6 +790,14 @@ function updateGameArea(){
 
     
 
+        // Oppdaterer og tegner lasere
+    for (let i = 0; i < myLasers.length; i++) {
+        myLasers[i].x += 5; // Juster hastigheten på laseren
+        myLasers[i].update();
+    }
+
+    // Fjern lasere som har gått ut av skjermen
+    myLasers = myLasers.filter(laser => laser.x < myGameArea.canvas.width);
 
 
 
@@ -491,7 +847,19 @@ function updateGameArea(){
     } else {
         hasPlayedBonk = false; // Nullstiller slik at dunk-lyd kan spilles ved neste kollisjon
     }
+
+    
+
+
 }
+
+
+function shootLaser() {
+    let laser = new component(30, 40, "lazer.png", myGamePiece.x + myGamePiece.width, myGamePiece.y + myGamePiece.height / 2 - 5, "image");
+    myLasers.push(laser);
+}
+
+
 
 
 
@@ -501,3 +869,4 @@ function everyinterval(n) {
     if ((myGameArea.frameNo / n) % 1 == 0) { return true; }
     return false;
 }
+
