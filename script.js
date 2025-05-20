@@ -197,13 +197,39 @@ function startGame() {
     backgroundSpeed = 1; // Sett tilbake til standard hastighet
     console.log("Restarter hastigheten til bakgrunnen til 1.");
 
-    // Legg til event-lytter for å skyte laser
-    document.addEventListener("keydown", function (e) {
-        if (e.key === " ") {
-            shootLaser();
-        }
-    });
 
+
+    
+    myLasers = []; // Tømmer lasere for å være sikker på at det ikke er noen gamle lasere igjen.
+
+    function shootLaser() {
+        let laser = new component(30, 40, "lazer.png", myGamePiece.x + myGamePiece.width, myGamePiece.y + myGamePiece.height / 2 - 5, "image");
+        myLasers.push(laser);
+    }  
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     // Sjekk om scoreContainer allerede eksisterer, og opprett det hvis det mangler
     let scoreContainer = document.getElementById("scoreContainer");
     if (!scoreContainer) {
@@ -217,13 +243,13 @@ function startGame() {
     // Opprett score display
     let scoreDisplay = document.createElement("div");
     scoreDisplay.id = "scoreDisplay";
-    scoreDisplay.innerHTML = "Score: 0";
+    scoreDisplay.innerHTML = "SCORE: 0";
 
     // Opprett highscore display
     let highScoreDisplay = document.createElement("div");
     highScoreDisplay.id = "highScoreDisplay";
     let savedHighScore = sessionStorage.getItem("highScore") || 0;
-    highScoreDisplay.innerHTML = "Highscore: " + savedHighScore;
+    highScoreDisplay.innerHTML = "HIGHSCORE: " + savedHighScore;
 
     // Append begge til containeren
     scoreContainer.appendChild(scoreDisplay);
@@ -231,7 +257,7 @@ function startGame() {
 
     // Nullstill score
     myScore = 0;
-    document.getElementById("scoreDisplay").innerHTML = "Score: 0";
+    document.getElementById("scoreDisplay").innerHTML = "SCORE: 0";
 
     // Sjekk om purpleBoxScoreDisplay allerede eksisterer, og opprett det hvis det mangler
     let purpleBoxScoreDisplay = document.getElementById("purpleBoxScoreDisplay");
@@ -241,7 +267,7 @@ function startGame() {
         scoreContainer.appendChild(purpleBoxScoreDisplay);
     }
     purpleBoxScore = 0; // Nullstill poengsummen for lilla bokser
-    purpleBoxScoreDisplay.innerHTML = "Target Score: 0";
+    purpleBoxScoreDisplay.innerHTML = "TRASH CLEANED: 0";
 
 
 
@@ -255,7 +281,7 @@ function startGame() {
     let purpleBoxHighScoreDisplay = document.createElement("div");
     purpleBoxHighScoreDisplay.id = "purpleBoxHighScoreDisplay";
     let savedPurpleBoxHighScore = sessionStorage.getItem("purpleBoxHighScore") || 0;
-    purpleBoxHighScoreDisplay.innerHTML = "Target Highscore: " + savedPurpleBoxHighScore;
+    purpleBoxHighScoreDisplay.innerHTML = "TRASH CLEANED HIGHSCORE: " + savedPurpleBoxHighScore;
 
     scoreContainer.appendChild(purpleBoxHighScoreDisplay);
 
@@ -278,6 +304,8 @@ function startGame() {
     // Nullstill bonk-lydstatus
     bonkLyd = new sound("bonk.mp3");
     hasPlayedBonk = false;
+
+    
 }
 
 
@@ -335,14 +363,14 @@ let myGameArea = {
         // Vis Highscore
         let highScore = sessionStorage.getItem("highScore") || 0;
         let highScoreDisplay = document.createElement("div");
-        highScoreDisplay.innerHTML = "Highscore: " + highScore;
+        highScoreDisplay.innerHTML = "HIGHSCORE: " + highScore;
         highScoreDisplay.classList.add("game-over-highscore");
         gameOverContainer.appendChild(highScoreDisplay);
 
         // Vis Purple Box Highscore
         let purpleBoxHighScore = sessionStorage.getItem("purpleBoxHighScore") || 0;
         let purpleBoxHighScoreDisplay = document.createElement("div");
-        purpleBoxHighScoreDisplay.innerHTML = "Target Highscore: " + purpleBoxHighScore;
+        purpleBoxHighScoreDisplay.innerHTML = "TRASH CLEANED HIGHSCORE: " + purpleBoxHighScore;
         purpleBoxHighScoreDisplay.classList.add("game-over-purplebox-highscore");
         gameOverContainer.appendChild(purpleBoxHighScoreDisplay);
             
@@ -374,7 +402,7 @@ let myGameArea = {
             // Opprett purpleBoxScoreDisplay på nytt
             let purpleBoxScoreDisplay = document.createElement("div");
             purpleBoxScoreDisplay.id = "purpleBoxScoreDisplay";
-            purpleBoxScoreDisplay.innerHTML = "Target Score: 0";
+            purpleBoxScoreDisplay.innerHTML = "TRASH CLEANED: 0";
             scoreContainer.appendChild(purpleBoxScoreDisplay);
     
             // Nullstill andre variabler
@@ -511,7 +539,7 @@ function updateGameArea(){
     // Update the purpleBoxScoreDisplay element
     let purpleBoxScoreDisplay = document.getElementById("purpleBoxScoreDisplay");
     if (purpleBoxScoreDisplay) {
-        purpleBoxScoreDisplay.innerHTML = "Target Score: " + purpleBoxScore;
+        purpleBoxScoreDisplay.innerHTML = "TRASH CLEANED: " + purpleBoxScore;
     }
 
 
@@ -522,7 +550,7 @@ function updateGameArea(){
     if (purpleBoxScore > purpleBoxHighScore) {
         sessionStorage.setItem("purpleBoxHighScore", purpleBoxScore); // Oppdater sessionStorage
         if (purpleBoxHighScoreDisplay) {
-            purpleBoxHighScoreDisplay.innerHTML = "Purple Box Highscore: " + purpleBoxScore; // Oppdater display
+            purpleBoxHighScoreDisplay.innerHTML = "TRASH CLEANED HIGHSCORE: " + purpleBoxScore; // Oppdater display
         }
     }
 
@@ -617,32 +645,41 @@ function updateGameArea(){
     // Fjern lasere som har gått ut av skjermen
     myLasers = myLasers.filter(laser => laser.x < myGameArea.canvas.width && laser.x + laser.width > 0);
 
+
+    
+                
+            
+    
     
 
-    for (let i = myLasers.length - 1; i >= 0; i--) {
-        for (let j = myObstacles.length - 1; j >= 0; j--) {
-            if (myLasers[i].crashWith(myObstacles[j])) {
-                console.log("Hindring truffet:", myObstacles[j]); // Debugging
-    
-                // Hvis det er en lilla boks, legg til poeng
-                if (myObstacles[j].canBeDestroyed && myObstacles[j].color === "purple") {
-                    purpleBoxScore += 1;
-                    document.getElementById("purpleBoxScoreDisplay").innerHTML = "Target Score: " + purpleBoxScore;
-                    console.log("Lilla boks truffet! Ny score:", purpleBoxScore); // Debugging
+        for (let i = myLasers.length - 1; i >= 0; i--) {
+            for (let j = myObstacles.length - 1; j >= 0; j--) {
+                if (myLasers[i].crashWith(myObstacles[j])) {
+                    console.log("Hindring truffet:", myObstacles[j]); // mer debugging blah blah
+                    
+
+
+
+
+                    // Hvis det er en target (søppel-bilde), legg til poeng
+                    if (myObstacles[j].canBeDestroyed) {
+                        purpleBoxScore += 1;
+                        document.getElementById("purpleBoxScoreDisplay").innerHTML = "TRASH CLEANED: " + purpleBoxScore;
+                        console.log("Target truffet! Ny score:", purpleBoxScore); // Debugging
+                    }
+
+                    // Fjern laseren
+                    myLasers.splice(i, 1);
+
+                    // Hvis boksen kan ødelegges, fjern den
+                    if (myObstacles[j].canBeDestroyed) {
+                        myObstacles.splice(j, 1);
+                    }
+
+                    break; // Avslutt den indre løkken for å unngå flere treff
                 }
-    
-                // Fjern laseren
-                myLasers.splice(i, 1);
-    
-                // Hvis boksen kan ødelegges (lilla), fjern den
-                if (myObstacles[j].canBeDestroyed) {
-                    myObstacles.splice(j, 1);
-                }
-    
-                break; // Avslutt den indre løkken for å unngå flere treff
             }
         }
-    }
 
 
     // Tømmer canvas for å tegne på nytt
@@ -685,19 +722,30 @@ function updateGameArea(){
     myObstacles.push(Object.assign(new component(20, x - height - gap, "teal", x, height + gap), { canBeDestroyed: false }));
 
     // Lag flere lilla hindringer hver 50. frame
-    // Lag flere lilla hindringer hver 50. frame
     if (myGameArea.frameNo % 50 === 0) {
         for (let i = 0; i < 3; i++) {
             let attempts = 0;
             let maxAttempts = 10;
             let newBox;
             let overlaps;
+
+
+
+            
     
+            let trash = ["søppel 1.png", "søppel 2.png", "søppel 3.png", "søppel 4.png"];
+
             do {
-                let y = Math.floor(Math.random() * (myGameArea.canvas.height - 30));
-                newBox = Object.assign(new component(50, 50, "purple", myGameArea.canvas.width, y), { canBeDestroyed: true });
-    
-                // Sjekk for overlapp med eksisterende hindringer
+                let y = Math.floor(Math.random() * (myGameArea.canvas.height - 50));
+                // Velg et tilfeldig bilde fra trash-arrayen
+                let randomIndex = Math.floor(Math.random() * trash.length);
+                let trashImage = trash[randomIndex];
+                // Lag en hinder med bilde
+                newBox = Object.assign(
+                    new component(60, 60, trashImage, myGameArea.canvas.width, y, "image"),
+                    { canBeDestroyed: true }
+                );
+
                 overlaps = myObstacles.some(obstacle => {
                     return (
                         newBox.x < obstacle.x + obstacle.width &&
@@ -706,10 +754,16 @@ function updateGameArea(){
                         newBox.y + newBox.height > obstacle.y
                     );
                 });
-    
+
                 attempts++;
             } while (overlaps && attempts < maxAttempts);
     
+
+
+
+
+
+            
             // Legg til boksen hvis det ikke er overlapp
             if (!overlaps) {
                 myObstacles.push(newBox);
@@ -777,17 +831,20 @@ function updateGameArea(){
     myGamePiece.speedX = 0;
     myGamePiece.speedY = 0;
 
+    // HER KAN JEG JUSTERE HASTIGHETEN PÅ SPILLEREN:
+
+
     // Beveger figuren når tastepilene blir trykket
-    if (myGameArea.keys && myGameArea.keys["ArrowLeft"]) { myGamePiece.speedX = -2 } // Venstre
-    if (myGameArea.keys && myGameArea.keys["ArrowRight"]) { myGamePiece.speedX = 2 }  // Høyre
-    if (myGameArea.keys && myGameArea.keys["ArrowUp"]) { myGamePiece.speedY = -2 } // Opp
-    if (myGameArea.keys && myGameArea.keys["ArrowDown"]) { myGamePiece.speedY = 2 }  // Ned
+    if (myGameArea.keys && myGameArea.keys["ArrowLeft"]) { myGamePiece.speedX = -2.4 } // Venstre
+    if (myGameArea.keys && myGameArea.keys["ArrowRight"]) { myGamePiece.speedX = 2.4 }  // Høyre
+    if (myGameArea.keys && myGameArea.keys["ArrowUp"]) { myGamePiece.speedY = -2.4 } // Opp
+    if (myGameArea.keys && myGameArea.keys["ArrowDown"]) { myGamePiece.speedY = 2.4 }  // Ned
 
     // Beveger figuren når WASD blir trykket:
-    if (myGameArea.keys && myGameArea.keys["a"]) { myGamePiece.speedX = -2 } // Venstre (A)
-    if (myGameArea.keys && myGameArea.keys["d"]) { myGamePiece.speedX = 2 }  // Høyre (D)
-    if (myGameArea.keys && myGameArea.keys["w"]) { myGamePiece.speedY = -2 } // Opp (W)
-    if (myGameArea.keys && myGameArea.keys["s"]) { myGamePiece.speedY = 2 }  // Ned (S)
+    if (myGameArea.keys && myGameArea.keys["a"]) { myGamePiece.speedX = -2.4 } // Venstre (A)
+    if (myGameArea.keys && myGameArea.keys["d"]) { myGamePiece.speedX = 2.4 }  // Høyre (D)
+    if (myGameArea.keys && myGameArea.keys["w"]) { myGamePiece.speedY = -2.4 } // Opp (W)
+    if (myGameArea.keys && myGameArea.keys["s"]) { myGamePiece.speedY = 2.4 }  // Ned (S)
 
     
 
@@ -805,13 +862,13 @@ function updateGameArea(){
 
     // Update Score
     myScore = myGameArea.frameNo;
-    document.getElementById("scoreDisplay").innerHTML = "Score: " + myScore;
+    document.getElementById("scoreDisplay").innerHTML = "SCORE: " + myScore;
 
     // Check and update highscore
     let highScore = sessionStorage.getItem("highScore") || 0;
     if (myScore > highScore) {
         sessionStorage.setItem("highScore", myScore);
-        document.getElementById("highScoreDisplay").innerHTML = "Highscore: " + myScore;
+        document.getElementById("highScoreDisplay").innerHTML = "HIGHSCORE: " + myScore;
     }
 
     
@@ -860,7 +917,12 @@ function shootLaser() {
     myLasers.push(laser);
 }
 
-
+// Fikser rar glitch med at laseret går gjennom søpla når man trykker "try again"..
+document.addEventListener("keydown", function (e) {
+    if (e.key === " ") {
+        shootLaser();
+    }
+});
 
 
 

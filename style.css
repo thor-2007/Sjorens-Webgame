@@ -123,10 +123,10 @@ canvas {
     background: rgba(0, 0, 0, 0.7);
     border-radius: 3px;
     padding: 5px;
-    width: 280px;
+    width: 320px;
     height: 25px;
     left: 50%;
-    transform: translateX(50%);
+    transform: translateX(35%);
     font-size: 20px;
     font-weight: bold;
 }
