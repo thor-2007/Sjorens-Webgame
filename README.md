@@ -18,14 +18,19 @@
 
 **Currently planning to add:**
 
+- Add shooting. **(FINISHED)**
+- Make game harder over time. **(FINISHED)**
+- Turn the purple blocks into random trash. **(FINISHED)**
+- Fix the issue where the lazer goes through the obsticles. **(FINISHED)**
+  
 - Fix all the sound related glitches **(currently focusing on)**
-- Turn the purple blocks into random trash. **(Currently focusing on)**
 - Make the green obstacle more aesthetically pleasing.  **(Currently focusing on)**
 - More maps.
 - A Currency.
 - Skin shop.
 - Working on a database for a scoreboard of the top players.
 - Own domain.
+
 
 
 
