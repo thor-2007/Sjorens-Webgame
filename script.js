@@ -102,6 +102,22 @@ function showMainMenu() {
     gameTitle.classList.add("game-title");
     menuContainer.appendChild(gameTitle);
 
+    // Kreditering : )
+    let credit = document.createElement("div");
+    credit.style.position = "fixed";
+    credit.style.bottom = "10px";
+    credit.style.right = "10px";
+    credit.style.background = "rgba(255,255,255,0.7)";
+    credit.style.padding = "6px 12px";
+    credit.style.borderRadius = "6px";
+    credit.style.fontSize = "16px";
+    credit.style.fontFamily = "Verdana, Geneva, Tahoma, sans-serif";
+    credit.style.zIndex = "1000";
+    credit.innerHTML = 'Kodet av Thor A. Å. &nbsp;|&nbsp; Tegninger laget av Vildan Dede';
+    document.body.appendChild(credit);
+
+
+
     // Lager en "play" knapp:
     let playButton = document.createElement("button");
     playButton.innerHTML = "Play";
